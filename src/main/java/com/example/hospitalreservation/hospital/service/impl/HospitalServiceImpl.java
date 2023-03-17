@@ -3,9 +3,12 @@ package com.example.hospitalreservation.hospital.service.impl;
 import com.example.hospitalreservation.hospital.dto.HospitalDto;
 import com.example.hospitalreservation.hospital.repository.HospitalRepository;
 import com.example.hospitalreservation.hospital.service.HospitalService;
-import jakarta.transaction.Transactional;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -13,7 +16,6 @@ import org.w3c.dom.NodeList;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import java.util.Objects;
 
 @RequiredArgsConstructor
 @Transactional
@@ -67,6 +69,7 @@ public class HospitalServiceImpl implements HospitalService {
         return nValue.getNodeValue();
     }
 
+
     @Override
     public void getHospitalList() {
         int page = 1;
@@ -105,14 +108,30 @@ public class HospitalServiceImpl implements HospitalService {
                     } //for
                 }
                 page += 1;
-                if(page>nList.getLength())
+                if(page>2)
                     break;
             }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
 
+    @Transactional(readOnly = true)
+    public HospitalDto getHospital(Long hospitalId){
+        return hospitalRepository.findById(hospitalId)
+                .map(HospitalDto::from)
+                .orElseThrow(() -> new EntityNotFoundException("병원이 없습니다"));
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public Page<HospitalDto> searchHospitalList(String searchKeyword, Pageable pageable){
+        if(searchKeyword == null || searchKeyword.isBlank()){
+            return hospitalRepository.findAll(pageable).map(HospitalDto::from);
+        }
+
+        return hospitalRepository.findByYadmNmContaining(searchKeyword, pageable).map(HospitalDto::from);
     }
 
 }
