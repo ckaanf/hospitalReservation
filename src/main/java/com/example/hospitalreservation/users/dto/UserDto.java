@@ -9,16 +9,16 @@ import java.util.List;
 
 public record UserDto(
         Long id,
-        String userId,
+        String username,
         String name,
         String password,
         List<UserRole> userRoles
 ) {
 
-    public static UserDto of(Long id,String userId,String name,String password,List<UserRole> userRoles){
+    public static UserDto of(Long id,String username,String name,String password,List<UserRole> userRoles){
         return new UserDto(
                 id,
-                userId,
+                username,
                 name,
                 password,
                 userRoles
@@ -27,7 +27,7 @@ public record UserDto(
     public static UserDto of(SignUpDto signUpDto, String encryptedPassword){
         return new UserDto(
                 null,
-                signUpDto.userId(),
+                signUpDto.username(),
                 signUpDto.name(),
                 encryptedPassword,
                 new ArrayList<>()
@@ -37,7 +37,7 @@ public record UserDto(
     public static UserDto from(Users users){
         return new UserDto(
                 users.getId(),
-                users.getUserId(),
+                users.getUsername(),
                 users.getName(),
                 users.getPassword(),
                 users.getUserRoles()
@@ -45,7 +45,7 @@ public record UserDto(
     }
     public Users toEntity(){
         return Users.of(
-                userId,
+                username,
                 name,
                 password,
                 userRoles
