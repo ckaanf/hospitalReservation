@@ -2,14 +2,20 @@ package com.example.hospitalreservation.config;
 
 import com.example.hospitalreservation.config.security.dto.CustomPrincipal;
 import com.example.hospitalreservation.config.security.dto.CustomUserDetails;
+import com.example.hospitalreservation.config.security.handler.LoginFailHandler;
 import com.example.hospitalreservation.users.dto.UserDto;
 import com.example.hospitalreservation.users.repository.UserRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.boot.autoconfigure.security.reactive.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
@@ -30,28 +36,34 @@ public class SecurityConfig {
                 .headers().frameOptions().sameOrigin()
                 .and()
                 .csrf().disable()
-                .cors(withDefaults())
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
-                .and()
                 .formLogin()
-                .loginPage("/user/login")
+                .loginPage("/user/loginForm")
+                .failureHandler(loginFailHandler())
+                .defaultSuccessUrl("/index")
                 .and()
                 .logout()
                 .logoutSuccessUrl("/")
                 .and().build();
 
     }
+
+    @Bean
+    public LoginFailHandler loginFailHandler(){
+        return new LoginFailHandler();
+    }
+
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer(){
+        return (web -> web.ignoring().requestMatchers(String.valueOf(PathRequest.toStaticResources().atCommonLocations())));
+    }
     @Bean
     public PasswordEncoder passwordEncoder() {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 
-//    @Bean
-//    public UserDetailsService userDetailsService(UserRepository userRepository){
-//        return username -> userRepository
-//                .findByUserId(username)
-//                .map(UserDto::from)
-////                .map(CustomPrincipal::from)
-//                .orElseThrow(() -> new UsernameNotFoundException("유저를 찾을 수 없습니다 - username: " + username));
-//    }
+    @Bean
+    AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception{
+        return authenticationConfiguration.getAuthenticationManager();
+    }
+
 }

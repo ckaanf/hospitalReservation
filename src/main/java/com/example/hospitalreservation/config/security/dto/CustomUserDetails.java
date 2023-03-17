@@ -12,15 +12,15 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public record CustomUserDetails(
-        String userId,
+        String username,
         String name,
         String password,
         Collection<? extends GrantedAuthority> authorities
 ) implements UserDetails {
 
-    public static CustomUserDetails of(String userId, String name, String password, List<UserRole> userRoles){
+    public static CustomUserDetails of(String username, String name, String password, List<UserRole> userRoles){
         return new CustomUserDetails(
-                userId,
+                username,
                 name,
                 password,
                 userRoles.stream()
@@ -33,7 +33,7 @@ public record CustomUserDetails(
 
     public static CustomUserDetails from(Users users){
         return CustomUserDetails.of(
-                users.getUserId(),
+                users.getUsername(),
                 users.getName(),
                 users.getPassword(),
                 users.getUserRoles()
@@ -52,7 +52,7 @@ public record CustomUserDetails(
 
     @Override
     public String getUsername() {
-        return userId;
+        return username;
     }
 
     @Override
