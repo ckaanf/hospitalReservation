@@ -35,7 +35,7 @@ public class UserController {
         System.out.println(signUpDto);
         System.out.println("회원 가입이 완료 되었습니다.");
 
-        return "/user/loginForm";
+        return "user/loginForm";
     }
 
     @GetMapping("/user/signin")

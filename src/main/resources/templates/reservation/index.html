@@ -35,7 +35,7 @@
                     <a class="link-2"
                        sec:authorize="isAuthenticated()"
                        th:text="${reservation.yadmNm()}"
-                       th:href="@{'/reservations/'+ ${reservation.id()}}">병원</a>
+                       th:href="@{'reservations/'+ ${reservation.id()}}">병원</a>
                 </li>
             </ul>
             <nav id="pagination" aria-label="Page navigation">

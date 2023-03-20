@@ -43,7 +43,7 @@
                     <a class="link-2"
                        sec:authorize="isAuthenticated()"
                        th:text="${hospital.yadmNm()}"
-                       th:href="@{'/hospitals/'+ ${hospital.id()}}">병원</a>
+                       th:href="@{'hospitals/'+ ${hospital.id()}}">병원</a>
                 </li>
             </ul>
             <!--페이지네이션 바-->
