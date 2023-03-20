@@ -8,4 +8,7 @@ public interface UserService {
 
     @Transactional
     UserDto createUser(SignUpDto signUpDto);
+
+    @org.springframework.transaction.annotation.Transactional(readOnly=true)
+    UserDto getUser(String username);
 }

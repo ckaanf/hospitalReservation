@@ -1,8 +1,8 @@
 package com.example.hospitalreservation.users.dto;
 
 import com.example.hospitalreservation.users.dto.request.SignUpDto;
-import com.example.hospitalreservation.users.entity.Users;
 import com.example.hospitalreservation.users.entity.UserRole;
+import com.example.hospitalreservation.users.entity.Users;
 
 import java.util.ArrayList;
 import java.util.List;

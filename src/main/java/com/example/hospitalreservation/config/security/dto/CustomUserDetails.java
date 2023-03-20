@@ -12,14 +12,18 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public record CustomUserDetails(
+        Long userId,
         String username,
+
         String name,
         String password,
         Collection<? extends GrantedAuthority> authorities
+
 ) implements UserDetails {
 
-    public static CustomUserDetails of(String username, String name, String password, List<UserRole> userRoles){
+    public static CustomUserDetails of(Long userId, String username, String name, String password, List<UserRole> userRoles){
         return new CustomUserDetails(
+                userId,
                 username,
                 name,
                 password,
@@ -33,6 +37,7 @@ public record CustomUserDetails(
 
     public static CustomUserDetails from(Users users){
         return CustomUserDetails.of(
+                users.getId(),
                 users.getUsername(),
                 users.getName(),
                 users.getPassword(),
@@ -57,21 +62,21 @@ public record CustomUserDetails(
 
     @Override
     public boolean isAccountNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isEnabled() {
-        return false;
+        return true;
     }
 }

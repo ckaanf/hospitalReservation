@@ -100,15 +100,11 @@ public class HospitalServiceImpl implements HospitalService {
                         HospitalDto hospitalDto = new HospitalDto(null, yadmNm, addr, telno, dgsbjtCd);
                         hospitalRepository.save(hospitalDto.toEntity());
 
-
-//                        System.out.println("병원이름 : " + getTagValue("yadmNm", eElement));
-//                        System.out.println("주소 : " + getTagValue("addr", eElement));
-//                        System.out.println("번호 : " + getTagValue("telno", eElement));
-//                System.out.println("진료과 : " + getTagValue("dgsbjtCd", eElement));
+                        
                     } //for
                 }
                 page += 1;
-                if(page>2)
+                if(page>2)  //nList.getLength() 시 모든 페이지 호출
                     break;
             }
 

@@ -1,6 +1,5 @@
 package com.example.hospitalreservation.reservation.entity;
 
-import com.example.hospitalreservation.audit.AuditingFields;
 import com.example.hospitalreservation.hospital.entity.Hospital;
 import com.example.hospitalreservation.users.entity.Users;
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -17,7 +16,14 @@ import java.util.Objects;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
-public class Reservation extends AuditingFields {
+@Table(
+        uniqueConstraints = {
+                @UniqueConstraint(
+                        columnNames = {"reservationDate","hospital_id"}
+                )
+        }
+)
+public class Reservation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -42,7 +48,8 @@ public class Reservation extends AuditingFields {
     @ManyToOne(optional = false)
     private Hospital hospital;
     @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL)
-    private final List<ReasonImage> reasonImages = new ArrayList<>();
+    @Setter
+    private List<ReasonImage> reasonImages = new ArrayList<>();
 
     public Reservation(String telNo, String reason, LocalDate reservationDate, Users users, Hospital hospital) {
         this.telNo = telNo;

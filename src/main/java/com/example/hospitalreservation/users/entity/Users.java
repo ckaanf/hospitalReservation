@@ -1,10 +1,11 @@
 package com.example.hospitalreservation.users.entity;
 
-import com.example.hospitalreservation.reservation.entity.Reservation;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,9 +27,6 @@ public class Users {
     @Column(nullable = false)
     private  String password;
 
-    @JsonBackReference
-    @OneToMany(mappedBy = "users")
-    private final List<Reservation> reservations = new ArrayList<>();
     @JsonManagedReference
     @OneToMany(mappedBy = "users", cascade = CascadeType.PERSIST)
     private List<UserRole> userRoles = new ArrayList<>();
