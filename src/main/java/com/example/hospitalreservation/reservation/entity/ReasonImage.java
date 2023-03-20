@@ -1,6 +1,5 @@
 package com.example.hospitalreservation.reservation.entity;
 
-import com.example.hospitalreservation.audit.AuditingFields;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -10,7 +9,7 @@ import lombok.Setter;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
-public class ReasonImage extends AuditingFields {
+public class ReasonImage {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
