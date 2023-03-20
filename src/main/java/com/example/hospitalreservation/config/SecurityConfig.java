@@ -1,29 +1,19 @@
 package com.example.hospitalreservation.config;
 
-import com.example.hospitalreservation.config.security.dto.CustomPrincipal;
-import com.example.hospitalreservation.config.security.dto.CustomUserDetails;
-import com.example.hospitalreservation.config.security.handler.LoginFailHandler;
-import com.example.hospitalreservation.users.dto.UserDto;
-import com.example.hospitalreservation.users.repository.UserRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.boot.autoconfigure.security.reactive.PathRequest;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
-import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
-import static org.springframework.security.config.Customizer.withDefaults;
-
+@Slf4j
 @Configuration
 @EnableWebSecurity
 @AllArgsConstructor
@@ -36,10 +26,15 @@ public class SecurityConfig {
                 .headers().frameOptions().sameOrigin()
                 .and()
                 .csrf().disable()
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
+                        .requestMatchers(HttpMethod.GET,"/").authenticated()
+                        .anyRequest().permitAll()
+                )
                 .formLogin()
-                .loginPage("/user/loginForm")
-                .failureHandler(loginFailHandler())
-                .defaultSuccessUrl("/index")
+                .loginPage("/user/signin")
+                .loginProcessingUrl("/user/login")
+                .defaultSuccessUrl("/")
                 .and()
                 .logout()
                 .logoutSuccessUrl("/")
@@ -48,22 +43,14 @@ public class SecurityConfig {
     }
 
     @Bean
-    public LoginFailHandler loginFailHandler(){
-        return new LoginFailHandler();
-    }
-
-    @Bean
-    public WebSecurityCustomizer webSecurityCustomizer(){
+    public WebSecurityCustomizer webSecurityCustomizer() {
         return (web -> web.ignoring().requestMatchers(String.valueOf(PathRequest.toStaticResources().atCommonLocations())));
     }
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
     }
 
-    @Bean
-    AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception{
-        return authenticationConfiguration.getAuthenticationManager();
-    }
 
 }
