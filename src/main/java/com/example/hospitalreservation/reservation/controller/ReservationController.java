@@ -1,6 +1,5 @@
 package com.example.hospitalreservation.reservation.controller;
 
-import com.example.hospitalreservation.config.security.dto.CustomPrincipal;
 import com.example.hospitalreservation.pagination.service.PaginationService;
 import com.example.hospitalreservation.reservation.dto.request.ReservationRequest;
 import com.example.hospitalreservation.reservation.dto.response.ReservationResponse;
@@ -14,7 +13,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -68,6 +66,8 @@ public class ReservationController {
         UserDetails userDetails = (UserDetails) principal;
         String username = userDetails.getUsername();
 
+        log.info(username);
+
         ReservationResponse reservation =reservationService.readReservation(username,reservationId);
 
         map.addAttribute("reservation", reservation);
@@ -99,13 +99,11 @@ public class ReservationController {
 //            @RequestPart(value = "images", required = false) List<MultipartFile> images
     ) throws IOException {
 
-
-
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         UserDetails userDetails = (UserDetails) principal;
         String username = userDetails.getUsername();
 
-        log.info("get reservaiton username: {} ", username);
+        log.info("get reservation username: {} ", username);
         List<MultipartFile> images = reservationRequest.images();
 
 
