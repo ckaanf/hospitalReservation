@@ -58,18 +58,10 @@ public class S3Uploader {
         }
 
         switch (ext) {
-            case "jpeg":
-                contentType = "image/jpeg";
-                break;
-            case "png":
-                contentType = "image/png";
-                break;
-            case "txt":
-                contentType = "text/plain";
-                break;
-            case "csv":
-                contentType = "text/csv";
-                break;
+            case "jpeg" -> contentType = "image/jpeg";
+            case "png" -> contentType = "image/png";
+            case "txt" -> contentType = "text/plain";
+            case "csv" -> contentType = "text/csv";
         }
 
         try {
